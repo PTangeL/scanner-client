@@ -1,0 +1,18 @@
+#import "./UserInfo.graphql"
+
+query users($cursor: String) {
+  users(first: 20, after: $cursor)  {
+    totalCount,
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage,
+      endCursor
+    },
+    edges {
+      node {
+        ...UserInfo
+      },
+      cursor
+    }
+  }
+}

@@ -1,0 +1,70 @@
+<html>
+  <header>
+    <script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+
+    <script>
+    function callFVIdent(plugin,template) {
+
+      var errmsg = '';
+
+      if (plugin && plugin.getVerificationTemplate) {
+        var rtnVer = plugin.getVerificationTemplate(template);
+        if (rtnVer == "Error 0x01000118 in BioAPI_Capture()") {
+            errmsg = "<h1>Scanning cancel</h1><h2>- Please re-scan</h1>";
+        } else if (rtnVer.indexOf("Capture cancelled by user") != -1) {
+            errmsg = "<h1>Scanning cancel</h1><h2>- Please re-scan</h2>";
+        } else if (rtnVer == "Error 0x0100010e in BioAPI_Capture()") {
+            errmsg = "<h1>Scanning timed out</h1><h2>- Please re-scan</h2>";
+        } else if (rtnVer.search(/^Error 0x00000101/i) >= 0) {
+            errmsg = "<h1>The device is not connected<h1><h2>- Please check the USB cable</h2><h2>- Restart the Internet Explorer</h2>";
+        } else if (rtnVer.search(/^Error 0x00000501/i) >= 0) {
+            errmsg = "<h1>We were unable to scan your finger, please try again, or ask a member of staff for assistance!<h1>";
+        } else if (rtnVer == "Error 0x10000104 in BioAPI initialisation") {
+            errmsg = "<h1>The device is not connected</h1><h2>- Please check the USB cable<h2>- Restart the Internet Explorer</h2>";
+        } else if (rtnVer == "Error 0x00000501 in BioAPI_Capture()") {
+            errmsg = "<h1>Scanning of the finger failed</h1><h2>- Please re-scan</h2>";
+        } else if (rtnVer.indexOf("0x020") != -1 || rtnVer == "Error 0x00000205 in BioAPI initialisation") {
+            errmsg = "<h1>The device is not connected</h1><h2>- Please check the USB cable</h2><h2>- Restart the Internet Explorer<h2>";
+        } else if (rtnVer.search(/^Error/i) >= 0) {
+            errmsg = "<h1>Please restart the Fingopay Terminal and ensure that the Scanner USB connections are firmly in place</h1>";
+        } else if (!rtnVer) {
+            errmsg = "<h1>Empty result, capture failed</h1><h2>- Please re-scan</h2>";
+        }
+      } else {
+          errmsg = "<h1>Plugin is missing</h1><h2>- Please check the USB cable</h2><h2>- Restart the Internet Explorer</h2>";
+      }
+      return { status: !errmsg, errmsg: errmsg, value: rtnVer};
+
+
+    };
+
+    function getTemplate() {
+       var template = 30000;
+       var plugin = document.getElementById('plugin0');
+       var result = callFVIdent(plugin, template);
+       var value = "error :("
+       if (result.status) {
+         value = result.value
+       }
+       document.getElementById('template').innerHTML = result.value
+    }
+    </script>
+
+  </header>
+  <body>
+    <button onClick="getTemplate()">get template</button>
+    <hr />
+    <p>
+      your template is:
+    </p>
+    <p id="template">
+
+    </p>
+    <object id="plugin0" type="application/x-h1plugin" width="10" height="10">
+        <param name="onload" value="" />
+    </object>
+  </body>
+</html>

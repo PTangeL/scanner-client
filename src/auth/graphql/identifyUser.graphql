@@ -1,0 +1,6 @@
+query identifyUser($template: String!){
+  identifyUser(template : $template) {
+    first_name,
+    id
+  }
+}

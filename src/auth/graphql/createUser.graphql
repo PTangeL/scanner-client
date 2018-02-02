@@ -1,0 +1,5 @@
+mutation createUser($template: String!, $email: String!, $first_name: String!, $last_name: String!, $password: String!, $date_of_birth: DateTime) {
+  createUser(user: { template: $template, email: $email, password: $password, first_name: $first_name, last_name: $last_name, date_of_birth: $date_of_birth}) {
+    id
+  }
+}

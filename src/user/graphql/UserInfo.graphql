@@ -1,0 +1,10 @@
+fragment UserInfo on User {
+  id,
+  roles,
+  acr,
+  email,
+  first_name,
+  last_name,
+  date_of_birth,
+  created_at
+}
